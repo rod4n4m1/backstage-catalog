@@ -1,0 +1,150 @@
+apiVersion: backstage.io/v1alpha1
+kind: Domain
+metadata:
+  name: pet-shop
+  description: Pet Shop business domain
+spec:
+  owner: platform-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: System
+metadata:
+  name: pet-shop-system
+  description: Complete pet shop management system
+spec:
+  owner: pet-shop-team
+  domain: pet-shop
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pet-shop-frontend
+  description: React frontend for pet shop customers
+  tags:
+    - react
+    - frontend
+spec:
+  type: website
+  lifecycle: production
+  owner: frontend-team
+  system: pet-shop-system
+  dependsOn:
+    - api:pet-shop-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: pet-shop-backend
+  description: Backend service for pet shop operations
+  tags:
+    - nodejs
+    - backend
+spec:
+  type: service
+  lifecycle: production
+  owner: backend-team
+  system: pet-shop-system
+  providesApis:
+    - pet-shop-api
+  dependsOn:
+    - resource:pet-shop-database
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: pet-shop-api
+  description: REST API for pet shop operations
+spec:
+  type: openapi
+  lifecycle: production
+  owner: backend-team
+  system: pet-shop-system
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Pet Shop API
+      version: 1.0.0
+    paths:
+      /pets:
+        get:
+          summary: List all pets
+      /orders:
+        post:
+          summary: Create new order
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: pet-shop-database
+  description: PostgreSQL database for pet shop data
+spec:
+  type: database
+  owner: platform-team
+  system: pet-shop-system
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: john.doe
+spec:
+  profile:
+    displayName: John Doe
+    email: john.doe@petshop.com
+  memberOf: [backend-team, pet-shop-team]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: jane.smith
+spec:
+  profile:
+    displayName: Jane Smith
+    email: jane.smith@petshop.com
+  memberOf: [frontend-team, pet-shop-team]
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: mike.wilson
+spec:
+  profile:
+    displayName: Mike Wilson
+    email: mike.wilson@petshop.com
+  memberOf: [platform-team]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: pet-shop-team
+spec:
+  type: team
+  children: [frontend-team, backend-team]
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: frontend-team
+spec:
+  type: team
+  parent: pet-shop-team
+  members: [jane.smith]
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: backend-team
+spec:
+  type: team
+  parent: pet-shop-team
+  members: [john.doe]
+  children: []
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+spec:
+  type: team
+  members: [mike.wilson]
+  children: []
