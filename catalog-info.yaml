@@ -60,17 +60,7 @@ spec:
   owner: backend-team
   system: pet-shop-system
   definition: |
-    openapi: 3.0.0
-    info:
-      title: Pet Shop API
-      version: 1.0.0
-    paths:
-      /pets:
-        get:
-          summary: List all pets
-      /orders:
-        post:
-          summary: Create new order
+    $text: https://raw.githubusercontent.com/rod4n4m1/backstage-catalog/refs/heads/main/openapi/pet-shop-oas3.yaml
 ---
 apiVersion: backstage.io/v1alpha1
 kind: Resource
