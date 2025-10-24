@@ -1,0 +1,200 @@
+openapi: 3.0.3
+info:
+  title: Pet Shop API
+  description: API for managing a pet shop
+  version: 0.1.0
+  contact:
+    name: Pet Shop Support
+    email: support@petshop.com
+servers:
+  - url: https://api.petshop.com/v1
+    description: Production server
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      parameters:
+        - name: limit
+          in: query
+          description: Maximum number of pets to return
+          required: false
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: category
+          in: query
+          description: Filter by pet category
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of pets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+    post:
+      summary: Add a new pet
+      operationId: addPet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetInput'
+      responses:
+        '201':
+          description: Pet created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '400':
+          description: Invalid input
+  /pets/{petId}:
+    get:
+      summary: Get a pet by ID
+      operationId: getPetById
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The ID of the pet to retrieve
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Pet details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Pet not found
+    put:
+      summary: Update a pet
+      operationId: updatePet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The ID of the pet to update
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PetInput'
+      responses:
+        '200':
+          description: Pet updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pet'
+        '404':
+          description: Pet not found
+    delete:
+      summary: Delete a pet
+      operationId: deletePet
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The ID of the pet to delete
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          description: Pet deleted successfully
+        '404':
+          description: Pet not found
+components:
+  schemas:
+    Pet:
+      type: object
+      required:
+        - id
+        - name
+        - category
+        - status
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 1
+        name:
+          type: string
+          example: "Fluffy"
+        category:
+          type: string
+          enum: [dog, cat, bird, fish, reptile, small_pet]
+          example: "cat"
+        breed:
+          type: string
+          example: "Persian"
+        age:
+          type: integer
+          minimum: 0
+          example: 2
+        price:
+          type: number
+          format: float
+          minimum: 0
+          example: 299.99
+        status:
+          type: string
+          enum: [available, pending, sold]
+          example: "available"
+        description:
+          type: string
+          example: "A friendly and playful cat"
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://example.com/images/pet1.jpg"
+    PetInput:
+      type: object
+      required:
+        - name
+        - category
+        - price
+      properties:
+        name:
+          type: string
+          example: "Fluffy"
+        category:
+          type: string
+          enum: [dog, cat, bird, fish, reptile, small_pet]
+          example: "cat"
+        breed:
+          type: string
+          example: "Persian"
+        age:
+          type: integer
+          minimum: 0
+          example: 2
+        price:
+          type: number
+          format: float
+          minimum: 0
+          example: 299.99
+        description:
+          type: string
+          example: "A friendly and playful cat"
+        imageUrl:
+          type: string
+          format: uri
+          example: "https://example.com/images/pet1.jpg"
