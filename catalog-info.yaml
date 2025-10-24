@@ -59,7 +59,7 @@ spec:
   lifecycle: production
   owner: backend-team
   system: pet-shop-system
-  definition: |
+  definition:
     $text: https://raw.githubusercontent.com/rod4n4m1/backstage-catalog/refs/heads/main/openapi/pet-shop-oas3.yaml
 ---
 apiVersion: backstage.io/v1alpha1
